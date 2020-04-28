@@ -23,6 +23,9 @@ class BookApp extends StatelessWidget {
 }
 
 class LoginPage extends StatefulWidget {
+//  final FirebaseUser post;
+//  LoginPage(this.post);
+
   @override
   _LoginPageState createState() => _LoginPageState();
 }
@@ -93,15 +96,23 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
-  Future<void> signIn() async{
+  Future<FirebaseUser> signIn() async{
     final formState = _formkey.currentState;
     if(formState.validate()){
       formState.save();
       try {
-        //////////
-        AuthResult user  = await FirebaseAuth.instance.signInWithEmailAndPassword(
+
+        final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+        AuthResult result = await _firebaseAuth.signInWithEmailAndPassword(
             email: _email, password: _password);
-        Navigator.pushNamed(context, '/homePage');
+        FirebaseUser user = result.user;
+
+        print('USERRRR SUCCESSS'+ user.email);
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => Home(user: user)),
+        );
       }catch (e){
             print(e.message+'777777777777777777');
       }
@@ -109,8 +120,16 @@ class _LoginPageState extends State<LoginPage> {
   }
 }
 
+class Home extends StatefulWidget {
 
-class Home extends StatelessWidget {
+  const Home({Key key,this.user});
+  final FirebaseUser user;
+
+  @override
+  _HomeState createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -126,17 +145,23 @@ class Home extends StatelessWidget {
               SliverPadding(
                 padding: const EdgeInsets.all(20),
                 sliver: SliverGrid.count(
-                  crossAxisSpacing: 2,
-                  mainAxisSpacing: 2,
+                  crossAxisSpacing: 5,
+                  mainAxisSpacing: 5,
                   crossAxisCount: 2,
                   children: <Widget>[
+                    Image.asset('assets/girl-icon-png-71.png',
+                        width: 30, height: 30, fit: BoxFit.fitWidth),
+                    Container(
+                      padding: const EdgeInsets.all(15),
+                      child: Text('WELCOME ${widget.user.email}',style: TextStyle(fontSize: 15,fontWeight: FontWeight.w700,color: Colors.white)),
+                    ),
                     Container(
                         padding: const EdgeInsets.all(20),
                         color: Colors.white,
                         child: Center(
                             child: Column(
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
+                                MainAxisAlignment.spaceEvenly,
                                 children: <Widget>[
                                   IconButton(
                                     icon: new Image.asset(
@@ -148,22 +173,22 @@ class Home extends StatelessWidget {
                                       Navigator.pushNamed(context, '/');
                                     },
                                   ),
-                              Text(
-                                'Student Profile',
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  fontFamily: 'Open Sans',
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ]))),
+                                  Text(
+                                    'Student Profile',
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      fontFamily: 'Open Sans',
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ]))),
                     Container(
                         padding: const EdgeInsets.all(20),
                         color: Colors.white,
                         child: Center(
                             child: Column(
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
+                                MainAxisAlignment.spaceEvenly,
                                 children: <Widget>[
                                   IconButton(
                                     icon: new Image.asset(
@@ -175,22 +200,22 @@ class Home extends StatelessWidget {
                                       Navigator.pushNamed(context, '/secondPage');
                                     },
                                   ),
-                              Text(
-                                'Student List',
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  fontFamily: 'Open Sans',
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ]))),
+                                  Text(
+                                    'Student List',
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      fontFamily: 'Open Sans',
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ]))),
                     Container(
                         padding: const EdgeInsets.all(20),
                         color: Colors.white,
                         child: Center(
                             child: Column(
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
+                                MainAxisAlignment.spaceEvenly,
                                 children: <Widget>[
                                   IconButton(
                                     icon: new Image.asset(
@@ -202,44 +227,44 @@ class Home extends StatelessWidget {
                                       Navigator.pushNamed(context, '/');
                                     },
                                   ),
-                              Text(
-                                'Performance',
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  fontFamily: 'Open Sans',
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ]))),
+                                  Text(
+                                    'Performance',
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      fontFamily: 'Open Sans',
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ]))),
                     Container(
                         padding: const EdgeInsets.all(20),
                         color: Colors.white,
                         child: Center(
                             child: Column(
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
+                                MainAxisAlignment.spaceEvenly,
                                 children: <Widget>[
-                              IconButton(
-                                icon: new Image.asset(
-                                    'assets/attendance-icon-png-7.png'),
-                                iconSize: 65,
-                                tooltip: 'Closes application',
-                                onPressed: () {
-                                  print('Pressed Attendance');
-                                  Navigator.pushNamed(context, '/');
-                                },
-                              ),
+                                  IconButton(
+                                    icon: new Image.asset(
+                                        'assets/attendance-icon-png-7.png'),
+                                    iconSize: 65,
+                                    tooltip: 'Closes application',
+                                    onPressed: () {
+                                      print('Pressed Attendance');
+                                      Navigator.pushNamed(context, '/');
+                                    },
+                                  ),
 //                              Image.asset('assets/attendance-icon-png-7.png',
 //                                  width: 50, height: 50, fit: BoxFit.fitWidth),
-                              Text(
-                                'Attendance',
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  fontFamily: 'Open Sans',
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ]))),
+                                  Text(
+                                    'Attendance',
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      fontFamily: 'Open Sans',
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ]))),
                   ],
                 ),
               ),
@@ -307,8 +332,8 @@ class FireBaseFireStoreDemoState extends State<FireBaseFireStoreDemo> {
           ),),
           trailing: IconButton(
             icon: Icon(Icons.delete, color: Colors.black,size: 30,),
-            onPressed: () {
-              deleteStudent(student);
+            onPressed:  () {
+              checkDelete(data);
             },
           ),
           onTap: () {
@@ -320,6 +345,44 @@ class FireBaseFireStoreDemoState extends State<FireBaseFireStoreDemo> {
     );
   }
 
+  Future<void> checkDelete(DocumentSnapshot data) async {
+    final student = Student.fromSnapshot(data);
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(40.0))
+            ),
+          title: Text('delete ?'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('Are you sure you want to delete.'),
+               // Text('You\’re like me. I’m never satisfied.'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Yes'),
+              onPressed: () {
+                deleteStudent(student);
+                Navigator.of(context).pop();
+              },
+            ),
+            FlatButton(
+              child: Text('No'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
   setUpdateUI(Student student) {
     nameController.text = student.name;
     admissionController.text = student.admissionNo;
@@ -363,11 +426,44 @@ class FireBaseFireStoreDemoState extends State<FireBaseFireStoreDemo> {
         child: Text(isEditing ? "UPDATE" : "ADD"),
         onPressed: () {
           add();
+          checkAdd();
           setState(() {
             showTextField = false;
           });
         },
       ),
+    );
+  }
+
+  Future<void> checkAdd() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(40.0))
+          ),
+          //backgroundColor: Colors.blue,
+          title: Text(''),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('Student Added Successfully.'),
+                // Text('You\’re like me. I’m never satisfied.'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 
