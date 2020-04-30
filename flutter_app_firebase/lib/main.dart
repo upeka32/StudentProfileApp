@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutterappfirebase/api.dart';
+import 'package:flutterappfirebase/main_drawer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import './models/Student.dart';
@@ -37,26 +38,23 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.indigo,
-      appBar: AppBar(
-        backgroundColor: Colors.indigo,
-        title: Text('Sign in'),
-      ),
+      backgroundColor: Colors.white,
       body: Form(
        // padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
         key: _formkey,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-            Image.asset('assets/owl.png',
-                width: 100, height: 160, fit: BoxFit.fitWidth),
+            Image.asset('assets/happy-student.png',
+                width: 300, height: 300, fit: BoxFit.contain),
             Text(
               'SUNSHINE ENGLISH MEDIUM SCHOOL',
               style: TextStyle(
                 decorationStyle: TextDecorationStyle.solid,
-                fontStyle: FontStyle.italic,
-                fontSize: 15,
-                fontWeight: FontWeight.w700
+                fontStyle: FontStyle.normal,
+                fontSize: 25,
+                fontWeight: FontWeight.bold,
+                color: Colors.indigo,
               ),
             ),
             TextFormField(
@@ -68,6 +66,7 @@ class _LoginPageState extends State<LoginPage> {
               onSaved: (input)=> _email = input,
               decoration: InputDecoration(
                 labelText: 'Email',
+                prefixIcon: Icon(Icons.email, color: Colors.indigo),
               ),
             ),
             TextFormField(
@@ -78,6 +77,7 @@ class _LoginPageState extends State<LoginPage> {
               },
               onSaved: (input)=> _password = input,
               decoration: InputDecoration(
+                prefixIcon: Icon(Icons.lock_open, color: Colors.indigo),
                 labelText: 'Password',
               ),
               obscureText: true,
@@ -88,6 +88,7 @@ class _LoginPageState extends State<LoginPage> {
               child: Text('Sign In',
               style: TextStyle(
                   fontSize: 20,
+                  color: Colors.white,
                   fontWeight: FontWeight.w700
               ),),
             )
@@ -134,11 +135,14 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Home'),
-          backgroundColor: Colors.indigo,
+          title: Text('Home',
+          style: TextStyle(color: Colors.indigo)),
+          backgroundColor: Colors.white,
+          iconTheme: new IconThemeData(color: Colors.indigo),
         ),
+        drawer: MainDrawer(),
         body: Container(
-          color: Colors.indigo,
+          color: Colors.white,
           child: CustomScrollView(
             primary: false,
             slivers: <Widget>[
@@ -149,15 +153,15 @@ class _HomeState extends State<Home> {
                   mainAxisSpacing: 5,
                   crossAxisCount: 2,
                   children: <Widget>[
-                    Image.asset('assets/girl-icon-png-71.png',
+                    Image.asset('assets/girl-icon.png',
                         width: 30, height: 30, fit: BoxFit.fitWidth),
                     Container(
-                      padding: const EdgeInsets.all(15),
-                      child: Text('WELCOME ${widget.user.email}',style: TextStyle(fontSize: 15,fontWeight: FontWeight.w700,color: Colors.white)),
+                      padding: const EdgeInsets.fromLTRB(20, 50, 10, 10),
+                      child: Text('WELCOME ${widget.user.email}',style: TextStyle(fontSize: 15,fontWeight: FontWeight.w700,color: Colors.indigo)),
                     ),
                     Container(
                         padding: const EdgeInsets.all(20),
-                        color: Colors.white,
+                        color: Colors.indigo,
                         child: Center(
                             child: Column(
                                 mainAxisAlignment:
@@ -184,7 +188,7 @@ class _HomeState extends State<Home> {
                                 ]))),
                     Container(
                         padding: const EdgeInsets.all(20),
-                        color: Colors.white,
+                        color: Colors.indigo,
                         child: Center(
                             child: Column(
                                 mainAxisAlignment:
@@ -211,7 +215,7 @@ class _HomeState extends State<Home> {
                                 ]))),
                     Container(
                         padding: const EdgeInsets.all(20),
-                        color: Colors.white,
+                        color: Colors.indigo,
                         child: Center(
                             child: Column(
                                 mainAxisAlignment:
@@ -238,7 +242,7 @@ class _HomeState extends State<Home> {
                                 ]))),
                     Container(
                         padding: const EdgeInsets.all(20),
-                        color: Colors.white,
+                        color: Colors.indigo,
                         child: Center(
                             child: Column(
                                 mainAxisAlignment:
@@ -254,8 +258,6 @@ class _HomeState extends State<Home> {
                                       Navigator.pushNamed(context, '/');
                                     },
                                   ),
-//                              Image.asset('assets/attendance-icon-png-7.png',
-//                                  width: 50, height: 50, fit: BoxFit.fitWidth),
                                   Text(
                                     'Attendance',
                                     style: TextStyle(
@@ -264,17 +266,20 @@ class _HomeState extends State<Home> {
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                ]))),
+                                ]
+                            ))),
                   ],
                 ),
               ),
             ],
           ),
-        ));
+        ),
+    );
   }
 }
 
 class FireBaseFireStoreDemo extends StatefulWidget {
+
   FireBaseFireStoreDemo() : super();
 
   final String title = "Students List";
@@ -284,11 +289,14 @@ class FireBaseFireStoreDemo extends StatefulWidget {
 }
 
 class FireBaseFireStoreDemoState extends State<FireBaseFireStoreDemo> {
+
+  bool _validate = false;
   bool showTextField = false;
   TextEditingController nameController = TextEditingController();
   TextEditingController admissionController = TextEditingController();
-  TextEditingController genderController = TextEditingController();
+  TextEditingController mobileController = TextEditingController();
   TextEditingController addressController = TextEditingController();
+  TextEditingController averageController = TextEditingController();
 
   bool isEditing = false;
   Student currentStudent;
@@ -355,7 +363,7 @@ class FireBaseFireStoreDemoState extends State<FireBaseFireStoreDemo> {
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(40.0))
             ),
-          title: Text('delete ?'),
+          title: Text('Delete ?'),
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
@@ -386,8 +394,9 @@ class FireBaseFireStoreDemoState extends State<FireBaseFireStoreDemo> {
   setUpdateUI(Student student) {
     nameController.text = student.name;
     admissionController.text = student.admissionNo;
+    mobileController.text = student.mobileNo;
+    averageController.text = student.average;
     addressController.text = student.address;
-    genderController.text = student.gender;
 
     setState(() {
       showTextField = true;
@@ -402,19 +411,20 @@ class FireBaseFireStoreDemoState extends State<FireBaseFireStoreDemo> {
           currentStudent,
           nameController.text,
           admissionController.text,
-          genderController.text,
-          addressController.text);
+          mobileController.text,
+          averageController.text,addressController.text);
       setState(() {
         isEditing = false;
       });
     } else {
       print("Before add");
       addStudent(nameController.text, admissionController.text,
-          genderController.text, addressController.text);
+          averageController.text, mobileController.text, addressController.text);
       print("Add successful");
     }
-    genderController.text = '';
     addressController.text = '';
+    averageController.text = '';
+    mobileController.text = '';
     admissionController.text = '';
     nameController.text = '';
   }
@@ -429,6 +439,11 @@ class FireBaseFireStoreDemoState extends State<FireBaseFireStoreDemo> {
           checkAdd();
           setState(() {
             showTextField = false;
+            admissionController.text.isEmpty ? _validate = true : _validate = false;
+            nameController.text.isEmpty ? _validate=true : _validate = false;
+            averageController.text.isEmpty ? _validate=true : _validate = false;
+            mobileController.text.isEmpty ? _validate=true : _validate = false;
+            addressController.text.isEmpty ? _validate=true : _validate = false;
           });
         },
       ),
@@ -450,7 +465,6 @@ class FireBaseFireStoreDemoState extends State<FireBaseFireStoreDemo> {
             child: ListBody(
               children: <Widget>[
                 Text('Student Added Successfully.'),
-                // Text('You\’re like me. I’m never satisfied.'),
               ],
             ),
           ),
@@ -470,7 +484,7 @@ class FireBaseFireStoreDemoState extends State<FireBaseFireStoreDemo> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.indigo,
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text(widget.title),
         backgroundColor: Colors.indigo,
@@ -502,24 +516,40 @@ class FireBaseFireStoreDemoState extends State<FireBaseFireStoreDemo> {
                             controller: admissionController,
                             decoration: InputDecoration(
                                 labelText: "Admission No",
+                                errorText: _validate ? 'Value Can\'t Be Empty' : null,
                                 hintText: "Enter Admission No"),
                           ),
                           TextFormField(
                             controller: nameController,
                             decoration: InputDecoration(
                                 labelText: "Student Name",
+                                errorText: _validate ? 'Value Can\'t Be Empty' : null,
                                 hintText: "Enter Student Name"),
                           ),
                           TextFormField(
-                            controller: genderController,
+                            controller: mobileController,
                             decoration: InputDecoration(
-                                labelText: "Gender", hintText: "Enter Gender"),
+                                labelText: "Mobile Number",
+                                errorText: _validate ? 'Value Can\'t Be Empty' : null,
+                                hintText: "Enter students mobile number"),
+                            keyboardType: TextInputType.number,
                           ),
+
                           TextFormField(
                             controller: addressController,
                             decoration: InputDecoration(
                                 labelText: "Address",
-                                hintText: "Enter Address"),
+                                errorText: _validate ? 'Value Can\'t Be Empty' : null,
+                                hintText: "Enter students address"),
+                          ),
+
+                          TextFormField(
+                            controller: averageController,
+                            decoration: InputDecoration(
+                                labelText: "Average",
+                                errorText: _validate ? 'Value Can\'t Be Empty' : null,
+                                hintText: "Enter students average"),
+                            keyboardType: TextInputType.number,
                           ),
                         ],
                       ),

@@ -4,18 +4,20 @@ class Student{
 
   String name;
   String admissionNo;
-  String gender;
   String address;
+  String mobileNo;
+  String average;
 
   DocumentReference documentReference;
 
-  Student({this.address,this.gender,this.admissionNo,this.name});
+  Student({this.address,this.mobileNo,this.average,this.admissionNo,this.name});
 
   Student.fromMap(Map <String,dynamic> map,{this.documentReference}){
     name = map["name"];
     admissionNo = map["admissionNo"];
-    gender = map["gender"];
     address = map["address"];
+    mobileNo = map["mobileNo"];
+    average = map["average"];
 
   }
 
@@ -23,7 +25,7 @@ class Student{
       :this.fromMap(snapshot.data,documentReference:snapshot.reference);
 
   toJson(){
-    return{'name': name, 'admissionNo' : admissionNo, 'gender':gender, 'address':address};
+    return{'name': name, 'admissionNo' : admissionNo, 'address':address, 'mobileNo':mobileNo,'average': average};
   }
 
 }

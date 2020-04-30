@@ -8,8 +8,8 @@ getStudents() {
   return Firestore.instance.collection(collectionName).snapshots();
 }
 
-addStudent(String name,String admissionNo,String gender,String address){
-  Student student = Student(admissionNo: admissionNo,name: name,gender:gender,address:address);
+addStudent(String name,String admissionNo,String mobileNo,String address,String average){
+  Student student = Student(admissionNo: admissionNo,name: name,mobileNo:mobileNo,address:address,average:average);
   try{
     Firestore.instance.runTransaction(
           (Transaction transaction) async{
@@ -24,10 +24,10 @@ addStudent(String name,String admissionNo,String gender,String address){
   }
 }
 
-updateStudent(Student student, String name,String admissionNo,String gender,String address){
+updateStudent(Student student, String name,String admissionNo,String mobileNo,String average,String address){
   try {
     Firestore.instance.runTransaction((transaction) async {
-      await transaction.update(student.documentReference, {'name': name,'admissionNo':admissionNo,'gender': gender,'address':address});
+      await transaction.update(student.documentReference, {'name': name,'admissionNo':admissionNo,'mobileNo': mobileNo,'average':average,'address':address});
     });
   } catch(e) {
     print(e.toString());
